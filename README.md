@@ -28,11 +28,11 @@ A FSM foi projetada com foco em:
 ## 📁 Estrutura do Projeto
 
 ```
-project3/
-├── src/
-│   └── safecrack.sv       # Implementação da FSM Moore
-├── images/
-│   └── diagrama_fsm.png   # Diagrama de estados
+OAC-SafeCrack/
+├── safecrack_fsm.sv            # Código completo
+├── safecrack_diagram.drawio    # Desenho do diagrama
+├── img/
+│   └── diagrama_fsm.png        # Diagrama de estados
 └── README.md
 ```
 
@@ -40,6 +40,15 @@ project3/
 |---------|-----------|
 | [`safecrack_fsm.sv`](safecrack_fsm.sv) | Implementação da FSM em SystemVerilog |
 | [`safecrack_diagram.drawio`](safecrack_diagram.drawio) | Diagrama de estados da FSM |
+
+---
+
+## 📊 Diagrama de Estados
+
+![Diagrama de Estados](img/diagram.png)
+
+> A linha de divisão horizontal dentro de cada estado separa o nome (topo) da saída `unlock` (base), conforme o padrão de representação de máquinas Moore.  
+> Setas tracejadas em vermelho indicam transições de erro que retornam ao `INIT`.
 
 ---
 
@@ -99,15 +108,6 @@ Qualquer entrada fora desta sequência retorna o sistema ao estado `INIT`.
 - ❌ Mais de um botão simultâneo → retorna para `INIT` (validado por `$onehot`)
 - ⏸️ Nenhum botão → mantém estado atual
 - 🔓 `UNLOCKED` permanece até reset assíncrono
-
----
-
-## 📊 Diagrama de Estados
-
-![Diagrama de Estados](images/diagrama_fsm.png)
-
-> A linha de divisão horizontal dentro de cada estado separa o nome (topo) da saída `unlock` (base), conforme o padrão de representação de máquinas Moore.  
-> Setas tracejadas em vermelho indicam transições de erro que retornam ao `INIT`.
 
 ---
 
