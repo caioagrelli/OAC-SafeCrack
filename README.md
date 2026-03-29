@@ -111,7 +111,7 @@ Qualquer entrada fora desta sequência retorna o sistema ao estado `INIT`.
 
 ---
 
-## 💻 Código — `src/safecrack.sv`
+## 💻 Código — `safecrack_fsm.sv`
 
 ```systemverilog
 module safecrack (
