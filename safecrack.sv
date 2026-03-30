@@ -5,102 +5,89 @@ module safecrack (
     output logic       unlock   // sinal de desbloqueio
 );
 
+    // botoes
+    logic [3:0] btn_active;
+    // se o botao é 0 (apertado), btn_active vira 1 (por causa do botao da fpga atuar como borda de descida)
+    assign btn_active = ~btn; 
+
+    // registradores do histórico de botao 
+    logic [3:0] btn_prev;
+
+    // Lógica de borda: evento só é válido no exato momento que aperta
+    logic event_valid;
+    assign event_valid = (btn_active != 4'b0000) && (btn_prev == 4'b0000); // o evento so é valido quando o anterior foi 0 e o atual não é 0
+
     // estados da fsm usando o one-hot
     typedef enum logic [4:0] {
         INIT     = 5'b00001,    // estado inicial
-        BLUE     = 5'b00010,    // primeiro botão (azul) pressionado
-        YELLOW_1 = 5'b00100,    // segundo botão (amarelo) pressionado
-        YELLOW_2 = 5'b01000,    // terceiro botão (amarelo) novamente pressionado
-        UNLOCKED = 5'b10000
+        BLUE     = 5'b00010,    // primeiro botão azul
+        YELLOW_1 = 5'b00100,    // segundo botão amarelo
+        YELLOW_2 = 5'b01000,    // terceiro botão amarelo dnv 
+        UNLOCKED = 5'b10000     // quarto botao vermelho (desbloqueado)
     } state_t;
 
     // registradores do estado atual e do proximo estado
-    state_t state, next_state; 
+    state_t state, next_state;
 
-
-    // logica para a detecção do botao pressionado
-    logic [3:0] btn_old;    // estado no clock passado (pra logica de borda)
-    logic event_valid;      // sinal pra indicar se o evento foi valido e pode verificar os estados
-    logic btn_onehot;       // pra garantir que apenas um botão foi pressionado 
-
-    // Registra o estado anterior dos botões
+    // allways unico para definir o proximo estado e conferir se o evento foi valido
     always_ff @(posedge clk or negedge rst) begin
-        if (!rst)
-            btn_old <= 4'b0000;    // reset: nenhum botão pressionado
-        else
-            btn_old <= btn;        // registra o estado atual pra logica de borda de subida
+        if (!rst) begin
+            state <= INIT; // caso for reseta volta pro init
+            btn_prev <= 4'b0000; // botao antigo fica 0 
+        end else begin
+            state <= next_state; 
+            btn_prev <= btn_active; // guarda o valor atual para comparar no próximo clock
+        end
     end
 
-    // o evento so é valido quando antes estava sem nenhum botão pressionado e o de agr é diferente de 0
-    assign event_valid = (btn != 4'b0000) && (btn_old == 4'b0000);
-    assign btn_onehot  = $onehot(btn); // garante que apenas um botão foi pressionado (logica one-hot)
-
-    // registro do estado atual
-    always_ff @(posedge clk or negedge rst) begin
-        if (!rst) // caso o reset seja ativado
-            state <= INIT;
-        else
-            state <= next_state;
-    end
-
-    // logica de transição de estados
+    // parte da transição dos estados
     always_comb begin
-        next_state = state;  // default: mantem estado se nao houver evento válido
+        next_state = state; // default so para evitar bugs e definir o estado por padrão
 
-        unique case (state)
-
-            // estado inicial
+        case (state)
+            // estado de reset/inicio
             INIT: begin
                 if (event_valid) begin
-                    if (btn_onehot && btn == 4'b0001)
-                        next_state = BLUE;
-                    else
-                        next_state = INIT;
+                    if (btn_active == 4'b1000)      next_state = BLUE;     // primeiro botao é o azul
+                    else                            next_state = INIT;     // caso n for ele fica no init 
                 end
             end
 
-            // estado do primeiro botão (azul) 
+            // estado 1, botao azul
             BLUE: begin
                 if (event_valid) begin
-                    if (btn_onehot && btn == 4'b0010)   // caso aperte o amarelo vai pro estado do primeiro amarelo
-                        next_state = YELLOW_1;
-                    else
-                        next_state = INIT;  // caso não, volta pro inicio
+                    if (btn_active == 4'b0100)      next_state = YELLOW_1; // so passa proximo qnd é amarelo
+                    else                            next_state = INIT;     // caso não volta pro inicio
                 end
             end
 
-            // estado do primeiro botão amarelo
+            // estado 2, 1 amarelo
             YELLOW_1: begin
                 if (event_valid) begin
-                    if (btn_onehot && btn == 4'b0010)   // caso aperte amarelo dnv vai pro estado do segundo amarelo
-                            next_state = YELLOW_2;
-                    else
-                        next_state = INIT;
+                    if (btn_active == 4'b0100)      next_state = YELLOW_2; // so passa pro 2 amarelo qnd é clicado dnv 
+                    else                            next_state = INIT;
                 end
             end
 
-            // estado do segundo botão amarelo
+            // estado 3, amarelo denovoo
             YELLOW_2: begin
                 if (event_valid) begin
-                    if (btn_onehot && btn == 4'b0100)   // caso aperte vermelho vai pro estado desbloqueado
-                            next_state = UNLOCKED;
-                    else
-                        next_state = INIT; // caso não, volta pro inicio
+                    if (btn_active == 4'b0001)      next_state = UNLOCKED; // so desbloquea qnd vai pro vermelho
+                    else                            next_state = INIT;
                 end
             end
 
-            // estado desbloqueado
+            // estado final desbloqueado
             UNLOCKED: begin
-                next_state = UNLOCKED; // fica aberto ate reset
+                next_state = UNLOCKED; // Fica aberto até o reset
             end
 
-            default: begin
-                next_state = INIT; // só por boa pratica, o código n vai chegar aqui por causa do unique case
-            end
+            default: next_state = INIT; // so por boa pratica pq isso nunca acontece
         endcase
     end
 
     // sinal do desbloqueio
     assign unlock = (state == UNLOCKED); // so 1 quando estiver no estado desbloqueado
+
 
 endmodule

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="9WROLWVvv-AIh2ElC2x9" name="SafeCrack">
-        <mxGraphModel dx="1153" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1183" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -275,10 +275,10 @@
                 <mxCell id="114" value="&lt;b&gt;0001&lt;/b&gt;&lt;div&gt;&lt;b&gt;0011&lt;br&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;0100&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="313" y="790" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="170" value="ENTRADAS E SAÍDAS VÁLIDAS" style="text;strokeColor=none;fillColor=light-dark(transparent,#004C99);html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+                <mxCell id="170" value="ENTRADAS E SAÍDAS VÁLIDAS" style="text;strokeColor=none;fillColor=light-dark(transparent,#004C99);html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
                     <mxGeometry x="40" y="20" width="380" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="171" value="DIAGRAMA DE ESTADOS" style="text;strokeColor=none;fillColor=light-dark(transparent,#004C99);html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" vertex="1" parent="1">
+                <mxCell id="171" value="DIAGRAMA DE ESTADOS" style="text;strokeColor=none;fillColor=light-dark(transparent,#004C99);html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
                     <mxGeometry x="40" y="320" width="300" height="40" as="geometry"/>
                 </mxCell>
             </root>
