@@ -278,6 +278,7 @@ A saída depende **exclusivamente do estado atual**, característica fundamental
 | Caio Agrelli  | caarr@cin.ufpe.br    |
 | Lucas David   | ldlf@cin.ufpe.br     |
 | João Gustavo  | jggp@cin.ufpe.br     |
+| Thales Afonso | tadg@cin.ufpe.br     |
 
 
 ---
